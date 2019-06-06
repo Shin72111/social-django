@@ -38,10 +38,13 @@ class User(AbstractUser):
         return self == user or user.followers.filter(follower=self).count() > 0
 
     def like(self, obj):
+        object_id = obj.id
+        obj = ContentType.objects.get_for_model(obj)
         if not self.is_liked(obj):
-            self.liked.create(content_type=obj)
+            self.liked.create(content_type=obj, object_id=object_id)
 
     def unlike(self, obj):
+        obj = ContentType.objects.get_for_model(obj)
         if self.is_liked(obj):
             self.liked.filter(content_type=obj).delete()
 
