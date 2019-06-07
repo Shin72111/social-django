@@ -49,6 +49,8 @@ class User(AbstractUser):
             self.liked.filter(content_type=obj).delete()
 
     def is_liked(self, obj):
+        if not isinstance(obj, ContentType):
+            obj = ContentType.objects.get_for_model(obj)
         return self.liked.filter(content_type=obj).count() > 0
 
 
